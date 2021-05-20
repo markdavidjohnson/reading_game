@@ -26,7 +26,7 @@ reading_lookup_hard = {
 
 reading_string = '''thein-gTEST cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
-he-r cat. then the cat talk_ed to her. the girl said, "I must
+her cat. then the cat talk_ed to her. the girl said, "I must
  b!e sl!e!epin-g. cats can not talk"
 the cat said, "you talk to m!e. so! I can talk to you."
 the girl ga!v_e the cat a big hug. "I never had a 
@@ -478,9 +478,10 @@ while True:
         flameaddcounter += 1
         check_level(player.score)
 
-        cur_speed = 3
+        max_speed = 5
+        cur_speed = max_speed
         if len(flame_list) > 0:
-            cur_speed = max(2,int(flame_list[correctIndex].imagerect.left/window_width * 3))
+            cur_speed = max(2,int(flame_list[maryoIndex].imagerect.left/window_width * max_speed))
         
         #print(flameaddcounter)
         if flameaddcounter == addnewflamerate:
@@ -499,8 +500,10 @@ while True:
         for f in flame_list:
             if counter < correctIndex:
                 flames.update(f,True,cur_speed)
-            flames.update(f,False,cur_speed)
+            else:
+                flames.update(f,False,cur_speed)
             if judgement_state:
+                print(maryoIndex,correctIndex)
                 if correctIndex +1 < len(flame_list):
                     correctIndex += 1
                 judgement_state = False
