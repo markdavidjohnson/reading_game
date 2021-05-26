@@ -59,7 +59,7 @@ black = (0,0,0)
 white = (255, 255, 255)
 
 total_reading_x_distance_traversed = 0
-fps = 25
+fps = 30
 level = 0
 addnewflamerate = 10 #200 #40 #200 # HIGHER IS SLOWER ORIGINAL WAS 20
 
@@ -487,10 +487,11 @@ while True:
         flameaddcounter += 1
         check_level(player.score)
 
-        max_speed = 6
+        max_speed = 8
         cur_speed = max_speed
         if len(flame_list) > 0:
-            cur_speed = max(1,int(flame_list[maryoIndex].imagerect.left/window_width * max_speed))
+            cur_speed = max(1,int(flame_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
+            cur_speed = min(max_speed, cur_speed)
         
         #print(flameaddcounter)
         if current_word_index < len(reading_string):
