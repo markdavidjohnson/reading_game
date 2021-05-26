@@ -5,6 +5,7 @@ import pygame, random, sys
 from pygame.locals import *
 pygame.init()
 from PIL import Image, ImageDraw, ImageFont
+import datetime
 
 
 
@@ -17,6 +18,7 @@ reading_lookup_easy = {
 #next one needs to have the final length post char updates in the value locations
 reading_lookup_hard = {
     "oo": 2,
+    "sh": 2,
     "in-g": 3,
     "er": 2,
     "th": 2,
@@ -24,10 +26,10 @@ reading_lookup_hard = {
     "_a": 1
 }
 
-reading_string = '''thein-gTEST cat that talk_ed . . 
+reading_string = '''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
 her cat. then the cat talk_ed to her. the girl said, "I must
- b!e sl!e!epin-g. cats can not talk"
+b!e sl!e!epin-g. cats can not talk"
 the cat said, "you talk to m!e. so! I can talk to you."
 the girl ga!v_e the cat a big hug. "I never had a 
 cat that talk_ed".
@@ -44,7 +46,6 @@ for i in reading_lookup_easy.keys():
     reading_string = reading_string.replace(i,reading_lookup_easy[i])
 
 
-
 reading_string = reading_string.split()
 current_word_index = 0
 
@@ -57,6 +58,7 @@ blue = (0,0,255)
 black = (0,0,0)
 white = (255, 255, 255)
 
+total_reading_x_distance_traversed = 0
 fps = 25
 level = 0
 addnewflamerate = 10 #200 #40 #200 # HIGHER IS SLOWER ORIGINAL WAS 20
@@ -113,7 +115,7 @@ class flames:
         fntsize = 40 * scale
         fntwidth = fntsize/1.8
         textlen = len(text)
-        self.txtwidth = int(fntsize*textlen)
+        self.txtwidth = int(fntwidth*(textlen+1))
         fnt = ImageFont.truetype('LiberationMono-Regular.ttf', fntsize)
         sml_fnt = ImageFont.truetype('LiberationMono-Regular.ttf', int(fntsize/1.5))
         image = Image.new("RGBA",(self.txtwidth,fntsize*2), (0,0,0,0))
@@ -124,7 +126,7 @@ class flames:
         self.need_complex_draw = False
         for i in reading_lookup_hard.keys():
             if i in text: 
-                print('gunna be hard')
+                #print('gunna be hard')
                 self.need_complex_draw = True
 
         i=0
@@ -135,15 +137,15 @@ class flames:
                 if text[i:i+len(ii)] == ii:
                     self.doesnt_match_hard = False
                     hardkey = ii
-                    print('hard',text[i:i+len(ii)])
+                    #print('hard',text[i:i+len(ii)])
             if self.doesnt_match_hard:
                 #print(text[i])
                 draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
                 #add the character to the image
             else:  #so it's hard
-                if hardkey in ['oo','th',"er"]:
-                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
-                    draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                if hardkey in ['oo','th',"er","sh"]:
+                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
+                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
                 elif hardkey in ['_e','_a']:
                     draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(255,255,255))
                     text = text.replace(hardkey,hardkey.replace('_',''))
@@ -200,7 +202,7 @@ class flames:
             fntsize = 40 * scale
             fntwidth = fntsize/1.8
             textlen = len(text)
-            self.txtwidth = int(fntsize*textlen)
+            self.txtwidth = int(fntwidth*(textlen+1))
             fnt = ImageFont.truetype('LiberationMono-Regular.ttf', fntsize)
             sml_fnt = ImageFont.truetype('LiberationMono-Regular.ttf', int(fntsize/1.5))
 
@@ -214,7 +216,7 @@ class flames:
             self.need_complex_draw = False
             for i in reading_lookup_hard.keys():
                 if i in text: 
-                    print('gunna be hard')
+                    #print('gunna be hard')
                     self.need_complex_draw = True
 
             i=0
@@ -225,13 +227,13 @@ class flames:
                     if text[i:i+len(ii)] == ii:
                         self.doesnt_match_hard = False
                         hardkey = ii
-                        print('hard',text[i:i+len(ii)])
+                        #print('hard',text[i:i+len(ii)])
                 if self.doesnt_match_hard:
                     #print(text[i])
                     draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,255,50))
                     #add the character to the image
                 else:  #so it's hard
-                    if hardkey in ['oo','th',"er"]:
+                    if hardkey in ['oo','th',"er","sh"]:
                         draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,255,50))
                         draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(50,255,50))
                     elif hardkey in ['_e','_a']:
@@ -390,6 +392,12 @@ endimagerect = startimage.get_rect()
 endimagerect.centerx = window_width/2
 endimagerect.centery = window_height/2
 
+total_reading_x_distance_traversed = 0
+next_word_x_distance_traversed = 0
+last_correct_input = datetime.datetime.now()
+
+player_dead_x = -80
+
 pygame.mixer.music.load('mario_theme.wav')
 gameover = pygame.mixer.Sound('mario_dies.wav')
 
@@ -431,8 +439,9 @@ while True:
 
                 keys = pygame.key.get_pressed()
 
-                if keys[pygame.K_d]:
-                    judgement_state = True
+                if keys[pygame.K_a]:
+                    if datetime.datetime.now() - last_correct_input > datetime.timedelta(milliseconds=200):
+                        judgement_state = True
                 
                 if event.key == K_UP:
                     movedown = False
@@ -455,7 +464,7 @@ while True:
 
                 keys = pygame.key.get_pressed()
 
-                if keys[pygame.K_d]:
+                if keys[pygame.K_a]:
                     judgement_state = False
 
                 if event.key == K_UP:
@@ -478,22 +487,21 @@ while True:
         flameaddcounter += 1
         check_level(player.score)
 
-        max_speed = 5
+        max_speed = 6
         cur_speed = max_speed
         if len(flame_list) > 0:
-            cur_speed = max(2,int(flame_list[maryoIndex].imagerect.left/window_width * max_speed))
+            cur_speed = max(1,int(flame_list[maryoIndex].imagerect.left/window_width * max_speed))
         
         #print(flameaddcounter)
-        if flameaddcounter == addnewflamerate:
-
-            flameaddcounter = 0
-            #newflame = flames()
-            if current_word_index < len(reading_string):
+        if current_word_index < len(reading_string):
+            if total_reading_x_distance_traversed >= next_word_x_distance_traversed:
+                #get new word flame
                 newflame = flames(reading_string[current_word_index],Canvas,cur_speed)
-                addnewflamerate = max(40,int(newflame.txtwidth/cur_speed*.9))
-                print("addnewflamerate",addnewflamerate)
+                #calc next location
+                next_word_x_distance_traversed = int(total_reading_x_distance_traversed + newflame.txtwidth)
+                print("total_reading_x_distance_traversed",total_reading_x_distance_traversed,"newflame.txtwidth",newflame.txtwidth,"next_word_x_distance_traversed",next_word_x_distance_traversed)
                 current_word_index += 1
-            flame_list.append(newflame)
+                flame_list.append(newflame)
 
         
         counter = 0
@@ -503,15 +511,18 @@ while True:
             else:
                 flames.update(f,False,cur_speed)
             if judgement_state:
-                print(maryoIndex,correctIndex)
+                #print(maryoIndex,correctIndex)
                 if correctIndex +1 < len(flame_list):
                     correctIndex += 1
+                    last_correct_input = datetime.datetime.now()
                 judgement_state = False
             counter += 1
-            
+        
+        total_reading_x_distance_traversed += cur_speed
+
 
         for f in flame_list:
-            if f.imagerect.left <= 0:
+            if f.imagerect.left < player_dead_x:
                 flame_list.remove(f)
                 correctIndex -= 1
                 maryoIndex -= 1
@@ -556,6 +567,12 @@ while True:
             #    topscore = player.score
             #break
             dont_want_to_die = True
+        if player.imagerect.left <= player_dead_x:
+            print('ded')
+            #if player.score > topscore:
+            #    topscore = player.score
+            break
+            #dont_want_to_die = True
 
         pygame.display.update()
 
