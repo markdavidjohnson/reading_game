@@ -30,14 +30,14 @@ reading_string = '''the cat that talk_ed . .
 a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
 her cat. then the cat talk_ed to her. the girl said, "I must
 b!e sl!e!epin-g. cats can not talk"
-the cat said, "you talk to m!e. so! I can talk to you."
-the girl ga!v_e the cat a big hug. "I never had a 
+the cat said, "you talk to m!e. s!o I can talk to you."
+the girl g!av_e the cat a big hug. "I never had a 
 cat that talk_ed".
 the cat said, "I never had a cat that talk_ed."
 the girl and the cat talk_ed and talk_ed.
-then a man ca!me to the park. h!e went up to 
+then a man c!ame to the park. h!e went up to 
 the girl and said, "can I hav_e that cat?"
-the cat said, "I will not go! with you."
+the cat said, "I will not g!o with you."
 the man said, "I must b!e sl!e!epin-g. cats do not 
 talk. I will l!e_ave this park." and h!e did.
 the end
@@ -47,7 +47,7 @@ for i in reading_lookup_easy.keys():
 
 
 reading_string = reading_string.split()
-current_word_index = 0
+current_word_index = 80
 
 #intialising variables for ease
 
@@ -512,7 +512,7 @@ while True:
             else:
                 flames.update(f,False,cur_speed)
             if judgement_state:
-                #print(maryoIndex,correctIndex)
+                print(current_word_index)
                 if correctIndex +1 < len(flame_list):
                     correctIndex += 1
                     last_correct_input = datetime.datetime.now()
