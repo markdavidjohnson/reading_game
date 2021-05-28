@@ -26,7 +26,7 @@ reading_lookup_hard = {
     "_a": 1
 }
 
-reading_string = '''the cat that talk_ed . . 
+reading_string = {"67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
 her cat. then the cat talk_ed to her. the girl said, "I must
 b!e sl!e!epin-g. cats can not talk"
@@ -40,14 +40,51 @@ the girl and said, "can I hav_e that cat?"
 the cat said, "I will not g!o with you."
 the man said, "I must b!e sl!e!epin-g. cats do not 
 talk. I will l!e_ave this park." and h!e did.
+the end . .
+''',
+"68":'''f!indin-g some fun on the moon . .
+some girls went to the moon in a moon ship.
+a girl said, "I will f!ind some fun." sh!e walk_ed 
+and walk_ed. soon sh!e c!am_e to a cow.
+the moon cow said, "w!e can hav_e lots of fun.
+come with m!e." the girl went with the moon cow to a 
+pool. the moon cow said, "this is how w!e have fun
+on the moon." sh!e jump_ed into the pool. and the 
+girl jump_ed into the pool.
+the girl said, "it is fun to swim on the moon." s!o 
+the girl and the cow went swimmin-g every d!ay. the 
+girl did not tell the other girls sh!e went 
+swimmin-g with a moon cow.
+the end . .
+''',
+"69":'''the fat man that never c!am_e back
+a man had an !old car. the !old car did not start.
+s!o the man went down the r!o_ad. soon h!e c!am_e to a 
+rat.
+the rat said, "n!o. rats do not hav_e cars."
+s!o the man went down the r!o_ad. soon h!e c!am_e to
+a fat man. h!e said, "can you start an !old car?"
+the fat man said, "yes. I can but I will not. I
+am sittin-g and I l!ik_e to sit."
+the man said, "you can sit in this car if you can 
+start it."
+s!o the fat man got in the car and m!ade the car 
+start. h!e said, "I l!ik_e this !old car. I will t!ak_e
+it down the r!o_ad and never come back."
 the end
 '''
+}
+current_lesson = "69"
+current_word_index = 0
+
+
 for i in reading_lookup_easy.keys():
-    reading_string = reading_string.replace(i,reading_lookup_easy[i])
+    reading_string[current_lesson] = reading_string[current_lesson].replace(i,reading_lookup_easy[i])
 
 
-reading_string = reading_string.split()
-current_word_index = 80
+reading_string[current_lesson] = reading_string[current_lesson].split()
+reading_string = reading_string[current_lesson]
+
 
 #intialising variables for ease
 
@@ -59,6 +96,8 @@ black = (0,0,0)
 white = (255, 255, 255)
 
 total_reading_x_distance_traversed = 0
+max_speed = 5
+
 fps = 30
 level = 0
 addnewflamerate = 10 #200 #40 #200 # HIGHER IS SLOWER ORIGINAL WAS 20
@@ -104,6 +143,7 @@ class dragon:
 class flames:
     #flames('test',Canvas)
     global reading_string
+    global current_lesson
     global addnewflamerate
     flamespeed = 1
     global window_width
@@ -487,7 +527,7 @@ while True:
         flameaddcounter += 1
         check_level(player.score)
 
-        max_speed = 8
+        
         cur_speed = max_speed
         if len(flame_list) > 0:
             cur_speed = max(1,int(flame_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
@@ -512,7 +552,7 @@ while True:
             else:
                 flames.update(f,False,cur_speed)
             if judgement_state:
-                print(current_word_index)
+                print('bookmark: ', current_word_index - len(flame_list))
                 if correctIndex +1 < len(flame_list):
                     correctIndex += 1
                     last_correct_input = datetime.datetime.now()
@@ -594,6 +634,4 @@ while True:
                                                      
                     
             
-        
-
-    
+      
