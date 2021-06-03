@@ -697,6 +697,7 @@ while True:
             dont_want_to_die = True
         if player.imagerect.left <= player_dead_x:
             print('ded')
+            update_score(f.text, datetime.datetime.now() - last_correct_input, 'yes')
             #if player.score > topscore:
             #    topscore = player.score
             break
