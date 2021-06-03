@@ -6,6 +6,16 @@ from pygame.locals import *
 pygame.init()
 from PIL import Image, ImageDraw, ImageFont
 import datetime
+import pandas as pd
+import random
+
+try:
+    df = pd.read_pickle('maryo_scores.pkl')
+except:
+    df = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name"])
+    df.to_pickle('maryo_scores.pkl')
+
+df1 = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name"])
 
 
 
@@ -26,7 +36,8 @@ reading_lookup_hard = {
     "_a": 1
 }
 
-reading_string = {"67":'''the cat that talk_ed . . 
+reading_string = {"17":'''that rat is sad''',
+"67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
 her cat. then the cat talk_ed to her. the girl said, "I must
 b!e sl!e!epin-g. cats can not talk"
@@ -72,18 +83,39 @@ s!o the fat man got in the car and m!ade the car
 start. h!e said, "I l!ik_e this !old car. I will t!ak_e
 it down the r!o_ad and never come back."
 the end
+''',
+"70": '''bill went fishi-ng
+bill went fishin-g with the other b!oys. the
+other b!oys had lots of fish, but bill did not get
+n!in_e fish !or f!iv_e fish. h!e got a big !old bag.
+the other b!oys m!ad_e fun of bill. they said, "w!e 
+hav_e fish and you hav_e an !old bag."
+bill was sad. but then h!e said, "wow. this bag
+is fill_ed with g!old."
+the other b!oys look_ed ins!id_e the bag. "wow,"
+they said.
+now bill was not sad. h!e said to the other b!oys,
+"you hav_e lots of fish, but I hav_e lots and lots of
+g!old. s!o I am rich."
+this is the end.
 '''
 }
-current_lesson = "69"
-current_word_index = 0
+
+student_name = 'B'
+current_lesson = "70"
+#current_lesson = "17"
+current_word_index = 123
+#current_word_index = 0
+max_speed = 7
 
 
 for i in reading_lookup_easy.keys():
     reading_string[current_lesson] = reading_string[current_lesson].replace(i,reading_lookup_easy[i])
 
 
-reading_string[current_lesson] = reading_string[current_lesson].split()
+reading_string[current_lesson] = reading_string[current_lesson].replace('\n',' . . ').split()
 reading_string = reading_string[current_lesson]
+
 
 
 #intialising variables for ease
@@ -95,14 +127,58 @@ blue = (0,0,255)
 black = (0,0,0)
 white = (255, 255, 255)
 
+last_correct_input = datetime.datetime.now()
+
+random_string = ''
+for _ in range(40):
+    # Considering only upper and lowercase letters
+    random_integer = random.randint(97, 97 + 26 - 1)
+    flip_bit = random.randint(0, 1)
+    # Convert to lowercase if the flip bit is on
+    random_integer = random_integer - 32 if flip_bit == 1 else random_integer
+    # Keep appending random characters using chr(x)
+    random_string += (chr(random_integer))
+game_id = random_string
+
 total_reading_x_distance_traversed = 0
-max_speed = 5
+
 
 fps = 30
 level = 0
-addnewflamerate = 10 #200 #40 #200 # HIGHER IS SLOWER ORIGINAL WAS 20
+addnewwordrate = 10 #200 #40 #200 # HIGHER IS SLOWER ORIGINAL WAS 20
 
 #defining the required function
+
+def update_score(presented_word, read_duration, killed):
+    global student_name
+    global game_id
+    global df1
+    global current_lesson
+    presented_word = presented_word.replace('"','').replace('.','').lower()
+    english_word = presented_word.replace('_','').replace('!','').replace('-','')
+    
+    timestamp = datetime.datetime.now()
+    data = {
+        "lesson": current_lesson,
+        "presented_word": presented_word,
+        "english_word": english_word,
+        "datetime": timestamp,
+        "game_id": game_id,
+        "read_duration": read_duration.total_seconds(),
+        "killed": killed,
+        "student_name": student_name
+    }
+    df2 = pd.DataFrame([data])
+    df1 = pd.concat([df1, df2])
+    #df1.to_pickle('maryo_scores.pkl')
+
+def save_score():
+    global df
+    global df1
+    dfo = pd.concat([df, df1],sort=True)
+    dfo.to_pickle('maryo_scores.pkl')
+    #df1.to_pickle('maryo_scores_latest.pkl')  # use this line if you want to write over all previous scores
+    print('saving')
 
 class dragon:
 
@@ -140,18 +216,19 @@ class dragon:
         h = self.imagerect.top
         return h
 
-class flames:
-    #flames('test',Canvas)
+class words:
+    #words('test',Canvas)
     global reading_string
     global current_lesson
-    global addnewflamerate
-    flamespeed = 1
+    global addnewwordrate
+    wordspeed = 1
     global window_width
 
     def __init__(self, text, surface,speed):
+        self.score_log_completed = False
         self.text = text
         scale = 2
-        self.flamespeed = speed
+        self.wordspeed = speed
         fntsize = 40 * scale
         fntwidth = fntsize/1.8
         textlen = len(text)
@@ -232,10 +309,10 @@ class flames:
         self.imagerect = pygame.Rect(window_width - 106, self.height, 20, 20)
         '''
 
-    def update(self,state, speed):
-        self.flamespeed = speed
-        self.imagerect.left -= self.flamespeed
-        if state:
+    def update(self,create_from_scratch, speed,update_last_correct_input):
+        self.wordspeed = speed
+        self.imagerect.left -= self.wordspeed
+        if create_from_scratch:
             scale = 2
             text = self.text
             
@@ -315,7 +392,7 @@ class flames:
             return False
 
 class maryo:
-    global moveup, movedown, gravity, cactusrect, firerect, moveleft, moveright, flame_list
+    global moveup, movedown, gravity, cactusrect, firerect, moveleft, moveright, word_list
     speed = 10
     downspeed = 20
 
@@ -352,6 +429,7 @@ class maryo:
 
 
 def terminate():        #to end the program
+    save_score()
     pygame.quit()
     sys.exit()
 
@@ -367,8 +445,8 @@ def waitforkey():
             
             
 
-def flamehitsmario(playerrect, flames):      #to check if flame has hit mario or not
-    for f in flame_list:
+def wordhitsmario(playerrect, words):      #to check if word has hit mario or not
+    for f in word_list:
         if playerrect.colliderect(f.imagerect):
             return True
         return False
@@ -436,7 +514,7 @@ total_reading_x_distance_traversed = 0
 next_word_x_distance_traversed = 0
 last_correct_input = datetime.datetime.now()
 
-player_dead_x = -80
+player_dead_x = -10
 
 pygame.mixer.music.load('mario_theme.wav')
 gameover = pygame.mixer.Sound('mario_dies.wav')
@@ -456,16 +534,16 @@ Dragon = dragon()
 
 while True:
 
-    flame_list = []
+    word_list = []
     player = maryo()
     
     moveup = movedown = gravity = moveright = moveleft = judgement_state = want_right = False
     maryoIndex=0
     correctIndex=-1
-    flameaddcounter = 0
+    wordaddcounter = 0
 
     gameover.stop()
-    pygame.mixer.music.play(-1,0.0)
+    #pygame.mixer.music.play(-1,0.0)
 
     
 
@@ -524,59 +602,68 @@ while True:
                 if event.key == K_ESCAPE:
                     terminate()
 
-        flameaddcounter += 1
+        wordaddcounter += 1
         check_level(player.score)
 
         
         cur_speed = max_speed
-        if len(flame_list) > 0:
-            cur_speed = max(1,int(flame_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
+        if len(word_list) > 0:
+            cur_speed = max(1,int(word_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
             cur_speed = min(max_speed, cur_speed)
         
-        #print(flameaddcounter)
+        #print(wordaddcounter)
         if current_word_index < len(reading_string):
             if total_reading_x_distance_traversed >= next_word_x_distance_traversed:
-                #get new word flame
-                newflame = flames(reading_string[current_word_index],Canvas,cur_speed)
+                #get new word word
+                newword = words(reading_string[current_word_index],Canvas,cur_speed)
                 #calc next location
-                next_word_x_distance_traversed = int(total_reading_x_distance_traversed + newflame.txtwidth)
-                print("total_reading_x_distance_traversed",total_reading_x_distance_traversed,"newflame.txtwidth",newflame.txtwidth,"next_word_x_distance_traversed",next_word_x_distance_traversed)
+                next_word_x_distance_traversed = int(total_reading_x_distance_traversed + newword.txtwidth)
+                print("total_reading_x_distance_traversed",total_reading_x_distance_traversed,"newword.txtwidth",newword.txtwidth,"next_word_x_distance_traversed",next_word_x_distance_traversed)
                 current_word_index += 1
-                flame_list.append(newflame)
+                word_list.append(newword)
 
         
         counter = 0
-        for f in flame_list:
+        for f in word_list:
             if counter < correctIndex:
-                flames.update(f,True,cur_speed)
-            else:
-                flames.update(f,False,cur_speed)
-            if judgement_state:
-                print('bookmark: ', current_word_index - len(flame_list))
-                if correctIndex +1 < len(flame_list):
-                    correctIndex += 1
+                words.update(f,True,cur_speed,last_correct_input)  # draw it as completed and move left
+                
+                #now add it to the score df if not already there
+                if not f.score_log_completed:
+                    print('updating',f.score_log_completed,f.text)
+                    update_score(f.text, datetime.datetime.now() - last_correct_input, 'no')
+                    f.score_log_completed = True
                     last_correct_input = datetime.datetime.now()
+            else:
+                words.update(f,False,cur_speed,last_correct_input)  # otherwise just continue moving it left
+            if judgement_state:
+                print('bookmark: ', current_word_index - len(word_list))
+
+                if correctIndex +1 < len(word_list):
+                    correctIndex += 1
+                    words.update(f,False,cur_speed,last_correct_input)  # mark it true and move left
+                    
                 judgement_state = False
             counter += 1
         
         total_reading_x_distance_traversed += cur_speed
 
 
-        for f in flame_list:
+        for f in word_list:
             if f.imagerect.left < player_dead_x:
-                flame_list.remove(f)
+                word_list.remove(f)
                 correctIndex -= 1
                 maryoIndex -= 1
 
-        if want_right and maryoIndex < len(flame_list) and maryoIndex < correctIndex:
+        if want_right and maryoIndex < len(word_list) and maryoIndex < correctIndex:
             maryoIndex += 1
             want_right = False
 
         spot = 0
         #print("maryoIndex",maryoIndex)
-        if len(flame_list)>0 and maryoIndex < len(flame_list):
+        if len(word_list)>0 and maryoIndex < len(word_list):
             #print("maryoIndex",maryoIndex)
-            spot = flame_list[maryoIndex].imagerect.right
+            spot = word_list[maryoIndex].imagerect.right
 
         player.update(spot)
         Dragon.update()
@@ -591,12 +678,12 @@ while True:
 
         drawtext('Score : %s | Top score : %s | Level : %s' %(player.score, topscore, level), scorefont, Canvas, 350, cactusrect.bottom + 10)
         
-        for f in flame_list:
+        for f in word_list:
             Canvas.blit(f.surface, f.imagerect)
 
                
 
-        if flamehitsmario(player.imagerect, flame_list):
+        if wordhitsmario(player.imagerect, word_list):
             '''if player.score > topscore:
                 topscore = player.score
             break
@@ -625,13 +712,3 @@ while True:
     Canvas.blit(endimage, endimagerect)
     pygame.display.update()
     waitforkey()
-        
-    
-
-
-        
-               
-                                                     
-                    
-            
-      
