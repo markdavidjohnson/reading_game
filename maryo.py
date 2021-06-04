@@ -23,28 +23,30 @@ reading_lookup_easy = {
     "!o": 'ō',
     "!a": "ā",
     "!e": "ē",
-    "!i": "ï"
+    "!i": "ï",
+    "!y": "ÿ"
 }
 #next one needs to have the final length post char updates in the value locations
 reading_lookup_hard = {
     "oo": 2,
     "sh": 2,
     "in-g": 3,
-    "er": 2,
+    "e-r": 2,
     "th": 2,
+    "wh": 2,
     "_e": 1,
     "_a": 1
 }
 
 reading_string = {"17":'''that rat is sad''',
 "67":'''the cat that talk_ed . . 
-a girl had a cat. sh!e lov_ed her cat. sh!e talk_ed to 
-her cat. then the cat talk_ed to her. the girl said, "I must
+a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
+he-r cat. then the cat talk_ed to he-r. the girl said, "I must
 b!e sl!e!epin-g. cats can not talk"
 the cat said, "you talk to m!e. s!o I can talk to you."
-the girl g!av_e the cat a big hug. "I never had a 
+the girl g!av_e the cat a big hug. "I neve-r had a 
 cat that talk_ed".
-the cat said, "I never had a cat that talk_ed."
+the cat said, "I neve-r had a cat that talk_ed."
 the girl and the cat talk_ed and talk_ed.
 then a man c!ame to the park. h!e went up to 
 the girl and said, "can I hav_e that cat?"
@@ -63,12 +65,12 @@ pool. the moon cow said, "this is how w!e have fun
 on the moon." sh!e jump_ed into the pool. and the 
 girl jump_ed into the pool.
 the girl said, "it is fun to swim on the moon." s!o 
-the girl and the cow went swimmin-g every d!ay. the 
-girl did not tell the other girls sh!e went 
+the girl and the cow went swimmin-g eve-ry d!ay. the 
+girl did not tell the othe-r girls sh!e went 
 swimmin-g with a moon cow.
 the end . .
 ''',
-"69":'''the fat man that never c!am_e back
+"69":'''the fat man that neve-r c!am_e back
 a man had an !old car. the !old car did not start.
 s!o the man went down the r!o_ad. soon h!e c!am_e to a 
 rat.
@@ -81,30 +83,51 @@ the man said, "you can sit in this car if you can
 start it."
 s!o the fat man got in the car and m!ade the car 
 start. h!e said, "I l!ik_e this !old car. I will t!ak_e
-it down the r!o_ad and never come back."
+it down the r!o_ad and neve-r come back."
 the end
 ''',
 "70": '''bill went fishi-ng
-bill went fishin-g with the other b!oys. the
-other b!oys had lots of fish, but bill did not get
+bill went fishin-g with the othe-r b!oys. the
+othe-r b!oys had lots of fish, but bill did not get
 n!in_e fish !or f!iv_e fish. h!e got a big !old bag.
-the other b!oys m!ad_e fun of bill. they said, "w!e 
+the othe-r b!oys m!ad_e fun of bill. they said, "w!e 
 hav_e fish and you hav_e an !old bag."
 bill was sad. but then h!e said, "wow. this bag
 is fill_ed with g!old."
-the other b!oys look_ed ins!id_e the bag. "wow,"
+the othe-r b!oys look_ed ins!id_e the bag. "wow,"
 they said.
-now bill was not sad. h!e said to the other b!oys,
+now bill was not sad. h!e said to the othe-r b!oys,
 "you hav_e lots of fish, but I hav_e lots and lots of
 g!old. s!o I am rich."
 this is the end.
+''',
+"71": '''the fat !e_agl_e
+ther_e was an !e_agl_e that was fat, fat, fat. the othe-r 
+!e_agl_es m!ad_e fun of the fat !e_agl_e. they said, "you do 
+not look l!ik_e an !e_agl_e. you look l!ik_e a fat rock." 
+the fat !e_agl_e was sittin-g in a tr!e!e when a t!ige-r c!am_e 
+huntin-g f!or !e_agl_es. that t!iger was g!oin-g to get a little 
+wh!it_e !e_agl_e. the little wh!it_e !e_agl_e was under the fat 
+!e_agl_e's tr!e!e. the other !e_agl_es yell_ed, but the little wh!it_e 
+!e_agl_e did not h!e_ar them. 
+the fat !e_agl_e look_ed at the t!iger gettin-g n!e_ar the 
+wh!it_e !e_agl_e. then the fat !e_agl_e said, "I must s!av_e that 
+wh!it_e !e_agl_e." s!o h!e jumped down. h!e c!am_e down on the t!ige-r 
+l!ik_e a fat rock. that t!ige-r ran far aw!ay. the 
+little wh!it_e !e_agl_e was s!av_ed. 
+when the other !e_agl_es c!am_e !ove-r to the fat !e_agl_e, 
+they said, "w!e will neve-r m!ak_e fun of you now." 
+the end
 '''
 }
+#suggested regex to quality check the paragraph you enter:
+#(?<!th)e( |\.)|a|er|ed( |\.)|\S\n
+
 
 student_name = 'B'
-current_lesson = "70"
+current_lesson = "71"
 #current_lesson = "17"
-current_word_index = 123
+current_word_index = 13
 #current_word_index = 0
 max_speed = 7
 
@@ -260,9 +283,16 @@ class words:
                 draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
                 #add the character to the image
             else:  #so it's hard
-                if hardkey in ['oo','th',"er","sh"]:
-                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
-                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                if hardkey in ['oo','th','wh','e-r',"sh"]: #must be two characters long
+                    if '-' in text:
+                        text = text.replace('-','')
+                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
+                    draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                elif hardkey in ['e-r']: #must be two characters at the end of taking out the marker chars  # made separate because the rule before wasnt bringing htem close enough
+                    if '-' in text:
+                        text = text.replace('-','')
+                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
+                    draw.text((int(fntwidth*(i-.5)+10),10), text[i+1], font=fnt, fill=(255,255,255))
                 elif hardkey in ['_e','_a']:
                     draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(255,255,255))
                     text = text.replace(hardkey,hardkey.replace('_',''))
@@ -543,7 +573,7 @@ while True:
     wordaddcounter = 0
 
     gameover.stop()
-    #pygame.mixer.music.play(-1,0.0)
+    pygame.mixer.music.play(-1,0.0)
 
     
 
