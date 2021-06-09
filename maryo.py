@@ -12,19 +12,17 @@ import random
 try:
     df = pd.read_pickle('maryo_scores.pkl')
 except:
-    df = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name"])
+    df = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name",'max_speed'])
     df.to_pickle('maryo_scores.pkl')
 
-df1 = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name"])
+df1 = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime","game_id","read_duration","killed","student_name",'max_speed'])
 
 
 
 reading_lookup_easy = {
     "!o": 'ō',
     "!a": "ā",
-    "!e": "ē",
-    "!i": "ï",
-    "!y": "ÿ"
+    "!e": "ē"
 }
 #next one needs to have the final length post char updates in the value locations
 reading_lookup_hard = {
@@ -35,7 +33,9 @@ reading_lookup_hard = {
     "th": 2,
     "wh": 2,
     "_e": 1,
-    "_a": 1
+    "_a": 1,
+    "!i": 1,
+    "!y": 1
 }
 
 reading_string = {"17":'''that rat is sad''',
@@ -125,14 +125,14 @@ wh!it_e tooth brush that sh!e l!ik_ed. but sh!e did not
 s!e!e he-r wh!it_e tooth brush. sh!e look_ed for it. sh!e 
 said to he-r mothe-r, "whe-r_e is m!y wh!it_e tooth brush?" 
 he-r mothe-r said, "I do not hav_e it." 
-the girl was walking back to he-r room when sh!e fell down. sh!e 
-fell ove-r he-r dog. that dog was 
-brushing his t!e!eth with he-r wh!it_e tooth brush. 
+the girl was walkin-g back to he-r room when sh!e fell down. sh!e 
+fell !ove-r he-r dog. that dog was 
+brushin-g his t!e!eth with he-r wh!it_e tooth brush. 
 the girl said, "you hav_e m!y wh!it_e tooth brush." 
 the dog said, "I l!ik_e t!e!eth that sh!in_e l!ik_e the 
 moon."
-when the girl look_ed at the dog's t!e!eth, sh!e smil_ed. 
-then the dog smil_ed. the girl said, "w!e hav_e t!e!eth 
+when the girl look_ed at the dog's t!e!eth, sh!e sm!il_ed. 
+then the dog sm!il_ed. the girl said, "w!e hav_e t!e!eth 
 that a-r_e wh!it_e, wh!it_e, wh!it_e."
 the dog said, "w!e hav_e t!e!eth that sh!in_e l!ik_e the 
 moon." 
@@ -140,12 +140,12 @@ the end
 '''
 }
 #suggested regex to quality check the paragraph you enter:
-#(?<!th|!|_)e( |\.)|a|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik
+#(?<!th|!|_)e( |\.)|a|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil
 
 student_name = 'B'
 current_lesson = "72"
 #current_lesson = "17"
-current_word_index = 48
+current_word_index = 0
 #current_word_index = 0
 max_speed = 7
 
@@ -194,6 +194,7 @@ def update_score(presented_word, read_duration, killed):
     global student_name
     global game_id
     global df1
+    global max_speed
     global current_lesson
     presented_word = presented_word.replace('"','').replace('.','').lower()
     english_word = presented_word.replace('_','').replace('!','').replace('-','')
@@ -207,7 +208,8 @@ def update_score(presented_word, read_duration, killed):
         "game_id": game_id,
         "read_duration": read_duration.total_seconds(),
         "killed": killed,
-        "student_name": student_name
+        "student_name": student_name,
+        'max_speed': max_speed
     }
     df2 = pd.DataFrame([data])
     df1 = pd.concat([df1, df2])
@@ -322,6 +324,18 @@ class words:
                     draw.text((int(fntwidth*(i+1.5)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(255,255,255))
                     i -= 1 # to compensate for not printing the -
                     text = text.replace(hardkey,hardkey.replace('-',''))
+                elif hardkey in ["!y"]:
+                        draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.7)), '_', font=fnt, fill=(255,255,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.675)), '_', font=fnt, fill=(255,255,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.65)), '_', font=fnt, fill=(255,255,255))
+                        i -= 1 # to compensate for not printing the -
+                        text = text.replace(hardkey,hardkey.replace('!',''))
+                elif hardkey in ["!i"]:
+                        draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(255,255,255))
+                        i -= 1 # to compensate for not printing the -
+                        text = text.replace(hardkey,hardkey.replace('!',''))
 
                 i += len(hardkey)-1
             i += 1
@@ -395,23 +409,37 @@ class words:
                         #print('hard',text[i:i+len(ii)])
                 if self.doesnt_match_hard:
                     #print(text[i])
-                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,255,50))
+                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
                     #add the character to the image
                 else:  #so it's hard
-                    if hardkey in ['oo','th',"er","sh"]:
-                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,255,50))
-                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(50,255,50))
+                    if hardkey in ['oo','th','wh','e-r',"sh"]: #must be two characters long
+                        if '-' in text:
+                            text = text.replace('-','')
+                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(50,50,255))
                     elif hardkey in ['_e','_a']:
-                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(50,255,50))
+                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(50,50,255))
                         text = text.replace(hardkey,hardkey.replace('_',''))
                         i -= 1 # to compensate for removing the _
                     elif hardkey in ["in-g"]:
-                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,255,50))
-                        draw.text((int(fntwidth*(i+1)+10),10), text[i+1], font=fnt, fill=(50,255,50))
-                        draw.text((int(fntwidth*(i+2)+10),10), text[i+3], font=fnt, fill=(50,255,50))
-                        draw.text((int(fntwidth*(i+1.5)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(50,255,50))
+                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i+1)+10),10), text[i+1], font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i+2)+10),10), text[i+3], font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i+1.5)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(50,50,255))
                         i -= 1 # to compensate for not printing the -
                         text = text.replace(hardkey,hardkey.replace('-',''))
+                    elif hardkey in ["!y"]:
+                        draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.7)), '_', font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.675)), '_', font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.65)), '_', font=fnt, fill=(50,50,255))
+                        i -= 1 # to compensate for not printing the -
+                        text = text.replace(hardkey,hardkey.replace('!',''))
+                    elif hardkey in ["!i"]:
+                            draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(50,50,255))
+                            draw.text((int(fntwidth*(i)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(50,50,255))
+                            i -= 1 # to compensate for not printing the -
+                            text = text.replace(hardkey,hardkey.replace('!',''))
 
                     i += len(hardkey)-1
                 i += 1
