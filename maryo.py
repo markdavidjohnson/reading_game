@@ -197,7 +197,7 @@ def update_score(presented_word, read_duration, killed):
     global max_speed
     global current_lesson
     presented_word = presented_word.replace('"','').replace('.','').lower()
-    english_word = presented_word.replace('_','').replace('!','').replace('-','')
+    english_word = presented_word.replace('_','').replace('!','').replace('-','').replace('?','').replace('ē','e').replace('ā','a').replace('ō','o')
     
     timestamp = datetime.datetime.now()
     data = {
