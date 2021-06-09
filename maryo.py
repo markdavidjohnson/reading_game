@@ -118,16 +118,34 @@ little wh!it_e !e_agl_e was s!av_ed.
 when the other !e_agl_es c!am_e !ove-r to the fat !e_agl_e, 
 they said, "w!e will neve-r m!ak_e fun of you now." 
 the end
+''',
+"72":'''the wh!it_e tooth brush 
+a girl l!ik_ed to brush he-r t!e!eth. sh!e had a 
+wh!it_e tooth brush that sh!e l!ik_ed. but sh!e did not 
+s!e!e he-r wh!it_e tooth brush. sh!e look_ed for it. sh!e 
+said to he-r mothe-r, "whe-r_e is m!y wh!it_e tooth brush?" 
+he-r mothe-r said, "I do not hav_e it." 
+the girl was walking back to he-r room when sh!e fell down. sh!e 
+fell ove-r he-r dog. that dog was 
+brushing his t!e!eth with he-r wh!it_e tooth brush. 
+the girl said, "you hav_e m!y wh!it_e tooth brush." 
+the dog said, "I l!ik_e t!e!eth that sh!in_e l!ik_e the 
+moon."
+when the girl look_ed at the dog's t!e!eth, sh!e smil_ed. 
+then the dog smil_ed. the girl said, "w!e hav_e t!e!eth 
+that a-r_e wh!it_e, wh!it_e, wh!it_e."
+the dog said, "w!e hav_e t!e!eth that sh!in_e l!ik_e the 
+moon." 
+the end 
 '''
 }
 #suggested regex to quality check the paragraph you enter:
-#(?<!th)e( |\.)|a|er|ed( |\.)|\S\n
-
+#(?<!th|!|_)e( |\.)|a|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik
 
 student_name = 'B'
-current_lesson = "71"
+current_lesson = "72"
 #current_lesson = "17"
-current_word_index = 13
+current_word_index = 48
 #current_word_index = 0
 max_speed = 7
 
