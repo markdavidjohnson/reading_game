@@ -8,6 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 import datetime
 import pandas as pd
 import random
+import time
 
 try:
     df = pd.read_pickle('maryo_scores.pkl')
@@ -38,7 +39,16 @@ reading_lookup_hard = {
     "!y": 1
 }
 
-reading_string = {"17":'''that rat is sad''',
+reading_string = {
+"15": '''mad at m!e
+''',
+"16": '''r!e_ad it.
+''',
+"17":'''that rat is sad''',
+"18":'''sam is mad at m!e
+''',
+"19":'''s!e!e th!e ram sit
+''',
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -142,13 +152,25 @@ the end
 #suggested regex to quality check the paragraph you enter:
 #(?<!th|!|_)e( |\.)|a|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil
 
-student_name = 'B'
+student_name = 'Dad'
 current_lesson = "72"
-#current_lesson = "17"
+#current_lesson = "15"
 current_word_index = 0
 #current_word_index = 0
-max_speed = 7
 
+
+if student_name == 'O':
+    completion_color = (255,150,150)
+    max_speed = 2
+    min_speed = 1
+elif student_name == "B":
+    completion_color = (50,50,255)
+    max_speed = 7
+    min_speed = 1
+else:
+    completion_color = (50,255,50)
+    max_speed = 7
+    min_speed = 7
 
 for i in reading_lookup_easy.keys():
     reading_string[current_lesson] = reading_string[current_lesson].replace(i,reading_lookup_easy[i])
@@ -409,35 +431,35 @@ class words:
                         #print('hard',text[i:i+len(ii)])
                 if self.doesnt_match_hard:
                     #print(text[i])
-                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
+                    draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=completion_color)
                     #add the character to the image
                 else:  #so it's hard
                     if hardkey in ['oo','th','wh','e-r',"sh"]: #must be two characters long
                         if '-' in text:
                             text = text.replace('-','')
-                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(50,50,255))
+                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=completion_color)
                     elif hardkey in ['_e','_a']:
-                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(50,50,255))
+                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=completion_color)
                         text = text.replace(hardkey,hardkey.replace('_',''))
                         i -= 1 # to compensate for removing the _
                     elif hardkey in ["in-g"]:
-                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i+1)+10),10), text[i+1], font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i+2)+10),10), text[i+3], font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i+1.5)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(50,50,255))
+                        draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i+1)+10),10), text[i+1], font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i+2)+10),10), text[i+3], font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i+1.5)+10),10-int(fntsize*.8)), '_', font=fnt, fill=completion_color)
                         i -= 1 # to compensate for not printing the -
                         text = text.replace(hardkey,hardkey.replace('-',''))
                     elif hardkey in ["!y"]:
-                        draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.7)), '_', font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.675)), '_', font=fnt, fill=(50,50,255))
-                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.65)), '_', font=fnt, fill=(50,50,255))
+                        draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.7)), '_', font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.675)), '_', font=fnt, fill=completion_color)
+                        draw.text((int(fntwidth*(i)+10),10-int(fntsize*.65)), '_', font=fnt, fill=completion_color)
                         i -= 1 # to compensate for not printing the -
                         text = text.replace(hardkey,hardkey.replace('!',''))
                     elif hardkey in ["!i"]:
-                            draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=(50,50,255))
-                            draw.text((int(fntwidth*(i)+10),10-int(fntsize*.8)), '_', font=fnt, fill=(50,50,255))
+                            draw.text((int(fntwidth*(i)+10),10), text[i+1], font=fnt, fill=completion_color)
+                            draw.text((int(fntwidth*(i)+10),10-int(fntsize*.8)), '_', font=fnt, fill=completion_color)
                             i -= 1 # to compensate for not printing the -
                             text = text.replace(hardkey,hardkey.replace('!',''))
 
@@ -635,6 +657,7 @@ while True:
 
                 if keys[pygame.K_a]:
                     if datetime.datetime.now() - last_correct_input > datetime.timedelta(milliseconds=200):
+                        last_correct_input = datetime.datetime.now()
                         judgement_state = True
                 
                 if event.key == K_UP:
@@ -684,7 +707,7 @@ while True:
         
         cur_speed = max_speed
         if len(word_list) > 0:
-            cur_speed = max(1,int(word_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
+            cur_speed = max(min_speed,int(word_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
             cur_speed = min(max_speed, cur_speed)
         
         #print(wordaddcounter)
