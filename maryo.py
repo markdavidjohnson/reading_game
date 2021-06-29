@@ -49,6 +49,8 @@ reading_string = {
 ''',
 "19":'''s!e!e th!e ram sit
 ''',
+"20":'''th!e ram is sad
+''',
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -147,16 +149,38 @@ that a-r_e wh!it_e, wh!it_e, wh!it_e."
 the dog said, "w!e hav_e t!e!eth that sh!in_e l!ik_e the 
 moon." 
 the end 
+''',
+"73":'''an !old h!ors_e and an !e_agl_e 
+an !e_agl_e said to an old horse, "I will teach 
+you how to fly. The !e_agl_e went to the top of the 
+wh!it_e barn.
+then the e_agl_e said, "now you fly to the top of 
+this barn." but the !old h!ors_e did not fl!y. h!e ran 
+into the s!id_e of that barn. 
+Then the eagle said, "I will fly to the top of 
+that car." and sh!e did. 
+But the old horse did not fly to the top of the 
+car. he ran into the side of the car. he said, 
+"my mother and my brother cannot fly. I can 
+not fly."
+the eagle said, "when you fly, you can have fun."
+the horse said, "I can run with an eagle on my
+back, and that is fun."
+so the eagle sat on the back of the old horse,
+and the old horse ran up a hill. when they got to 
+The top of the hill, the eagle said, "yes, this is 
+a lot of fun."
+this is the end.
 '''
 }
 #suggested regex to quality check the paragraph you enter:
-#(?<!th|!|_)e( |\.)|a|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil
+#(?<!th|!|_)e( |\.)|a(?!n)|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil
 
-student_name = 'Dad'
-current_lesson = "72"
-#current_lesson = "15"
+student_name = 'O'  # 'Dad' 'B' 'O'
+current_lesson = "73"
+current_lesson = "20"
+current_word_index = 161
 current_word_index = 0
-#current_word_index = 0
 
 
 if student_name == 'O':
@@ -812,3 +836,9 @@ while True:
     Canvas.blit(endimage, endimagerect)
     pygame.display.update()
     waitforkey()
+
+
+
+
+
+    
