@@ -35,6 +35,7 @@ reading_lookup_hard = {
     "wh": 2,
     "_e": 1,
     "_a": 1,
+    "_k": 1,
     "!i": 1,
     "!y": 1
 }
@@ -50,6 +51,8 @@ reading_string = {
 "19":'''s!e!e th!e ram sit
 ''',
 "20":'''th!e ram is sad
+''',
+"21":'''this cat is sic_k. this cat is sad.
 ''',
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
@@ -151,36 +154,36 @@ moon."
 the end 
 ''',
 "73":'''an !old h!ors_e and an !e_agl_e 
-an !e_agl_e said to an old horse, "I will teach 
-you how to fly. The !e_agl_e went to the top of the 
-wh!it_e barn.
-then the e_agl_e said, "now you fly to the top of 
+an !e_agl_e said to an !old h!ors_e, "I will t!e_ach 
+you how to fl!y. the !e_agl_e went to the top of the 
+wh!it_e barn. 
+then the !e_agl_e said, "now you fl!y to the top of 
 this barn." but the !old h!ors_e did not fl!y. h!e ran 
 into the s!id_e of that barn. 
-Then the eagle said, "I will fly to the top of 
-that car." and sh!e did. 
-But the old horse did not fly to the top of the 
-car. he ran into the side of the car. he said, 
-"my mother and my brother cannot fly. I can 
-not fly."
-the eagle said, "when you fly, you can have fun."
-the horse said, "I can run with an eagle on my
-back, and that is fun."
-so the eagle sat on the back of the old horse,
-and the old horse ran up a hill. when they got to 
-The top of the hill, the eagle said, "yes, this is 
-a lot of fun."
-this is the end.
+Then the !e_agl_e said, "I will fl!y to the top of 
+that ca-r." and sh!e did. 
+but the !old h!ors_e did not fl!y to the top of the 
+ca-r. h!e ran into the s!id_e of the ca-r. h!e said, 
+"m!y mothe-r and m!y brothe-r can not fl!y. I can 
+not fl!y."
+the !e_agl_e said, "when you fl!y, you can hav_e fun." 
+the h!ors_e said, "I can run with an !e_agl_e on m!y 
+back, and that is fun." 
+so the !e_agl_e sat on the back of the !old h!ors_e, 
+and the !old h!ors_e ran up a hill. when they got to 
+the top of the hill, the !e_agl_e said, "yes, this is 
+a lot of fun." 
+this is the end. 
 '''
 }
 #suggested regex to quality check the paragraph you enter:
-#(?<!th|!|_)e( |\.)|a(?!n)|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil
+#(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
-student_name = 'O'  # 'Dad' 'B' 'O'
-current_lesson = "73"
-current_lesson = "20"
-current_word_index = 161
+student_name = 'B'  # 'Dad' 'B' 'O'
+current_lesson = "74"
+#current_lesson = "21"
 current_word_index = 0
+#current_word_index = 7
 
 
 if student_name == 'O':
@@ -359,7 +362,7 @@ class words:
                         text = text.replace('-','')
                     draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
                     draw.text((int(fntwidth*(i-.5)+10),10), text[i+1], font=fnt, fill=(255,255,255))
-                elif hardkey in ['_e','_a']:
+                elif hardkey in ['_e','_a','_k']:
                     draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(255,255,255))
                     text = text.replace(hardkey,hardkey.replace('_',''))
                     i -= 1 # to compensate for removing the _
