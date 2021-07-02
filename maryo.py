@@ -180,9 +180,9 @@ this is the end.
 #(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
 student_name = 'B'  # 'Dad' 'B' 'O'
-current_lesson = "74"
+current_lesson = "73"
 #current_lesson = "21"
-current_word_index = 0
+current_word_index = 186
 #current_word_index = 7
 
 
@@ -192,12 +192,13 @@ if student_name == 'O':
     min_speed = 1
 elif student_name == "B":
     completion_color = (50,50,255)
-    max_speed = 7
+    max_speed = 4
     min_speed = 1
 else:
     completion_color = (50,255,50)
     max_speed = 7
     min_speed = 7
+megaspeed = 30  # used when the kid gets to the right side of the screen
 
 for i in reading_lookup_easy.keys():
     reading_string[current_lesson] = reading_string[current_lesson].replace(i,reading_lookup_easy[i])
