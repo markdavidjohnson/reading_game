@@ -54,6 +54,8 @@ reading_string = {
 ''',
 "21":'''this cat is sic_k. this cat is sad.
 ''',
+"22":'''that is a s!e!ed. s!e!e a ram !e_at it.
+'''
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -174,15 +176,31 @@ and the !old h!ors_e ran up a hill. when they got to
 the top of the hill, the !e_agl_e said, "yes, this is 
 a lot of fun." 
 this is the end. 
+''',
+"74":'''the fat man that never came back 
+a man had an old car. the old car did not start. so 
+the man went down the road. soon he came to a rat. 
+the man said, "can you start an old car?" 
+the rat said, "no. rats do not have cars." 
+So the man went down the road. soon he came to a 
+fat man. he said, "can you start an old car?" 
+the fat man said, "yes, I can but I will not. I am 
+sitting and I like to sit." 
+the man said, "you can sit in this car if you can 
+start it." 
+so the fat man got in the car and made the car 
+start. he said, "I like this old car. I will take it down 
+the road and never come back." 
+the end
 '''
 }
 #suggested regex to quality check the paragraph you enter:
 #(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
 student_name = 'B'  # 'Dad' 'B' 'O'
-current_lesson = "73"
+current_lesson = "74"
 #current_lesson = "21"
-current_word_index = 186
+current_word_index = 0
 #current_word_index = 7
 
 
