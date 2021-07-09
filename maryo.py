@@ -20,13 +20,13 @@ df1 = pd.DataFrame(columns=["lesson","presented_word","english_word","datetime",
 
 
 
-reading_lookup_easy = {
+reading_lookup_simple_letters = {
     "!o": 'ō',
     "!a": "ā",
     "!e": "ē"
 }
 #next one needs to have the final length post char updates in the value locations
-reading_lookup_hard = {
+reading_lookup_complex_letters = {
     "o-o": 2,
     "sh": 2,
     "in-g": 3,
@@ -232,16 +232,17 @@ elif student_name == "B":
     min_speed = 1
 else:
     completion_color = (50,255,50)
-    max_speed = 7
-    min_speed = 7
-megaspeed = 30  # used when the kid gets to the right side of the screen
+    max_speed = 3
+    min_speed = 3
+mega_speed = 30  # used when the kid gets to the right side of the screen
 
-for i in reading_lookup_easy.keys():
-    reading_string[current_lesson] = reading_string[current_lesson].replace(i,reading_lookup_easy[i])
+todays_reading_string = ''
+for i in reading_lookup_simple_letters.keys():
+    todays_reading_string = reading_string[current_lesson].replace(i,reading_lookup_simple_letters[i])
 
 
-reading_string[current_lesson] = reading_string[current_lesson].replace('\n',' . . ').split()
-reading_string = reading_string[current_lesson]
+todays_reading_string = todays_reading_string.replace('\n',' . . ').split()
+
 
 
 
@@ -347,7 +348,7 @@ class dragon:
 
 class words:
     #words('test',Canvas)
-    global reading_string
+    global todays_reading_string
     global current_lesson
     global addnewwordrate
     wordspeed = 1
@@ -370,7 +371,7 @@ class words:
         
 
         self.need_complex_draw = False
-        for i in reading_lookup_hard.keys():
+        for i in reading_lookup_complex_letters.keys():
             if i in text: 
                 #print('gunna be hard')
                 self.need_complex_draw = True
@@ -378,7 +379,7 @@ class words:
         i=0
         while i < len(text):
             self.doesnt_match_hard = True
-            for ii in reading_lookup_hard.keys():
+            for ii in reading_lookup_complex_letters.keys():
                 #print('checking', text[i:i+len(ii)],text[i:i+len(ii)] == ii)
                 if text[i:i+len(ii)] == ii:
                     self.doesnt_match_hard = False
@@ -479,7 +480,7 @@ class words:
             
             
             self.need_complex_draw = False
-            for i in reading_lookup_hard.keys():
+            for i in reading_lookup_complex_letters.keys():
                 if i in text: 
                     #print('gunna be hard')
                     self.need_complex_draw = True
@@ -487,7 +488,7 @@ class words:
             i=0
             while i < len(text):
                 self.doesnt_match_hard = True
-                for ii in reading_lookup_hard.keys():
+                for ii in reading_lookup_complex_letters.keys():
                     #print('checking', text[i:i+len(ii)],text[i:i+len(ii)] == ii)
                     if text[i:i+len(ii)] == ii:
                         self.doesnt_match_hard = False
@@ -554,7 +555,7 @@ class words:
             return False
 
 class maryo:
-    global moveup, movedown, gravity, cactusrect, firerect, moveleft, moveright, word_list
+    global moveup, movedown, gravity, cactusrect, firerect, moveleft, moveright, all_currently_displayed_words
     speed = 10
     downspeed = 20
 
@@ -608,7 +609,7 @@ def waitforkey():
             
 
 def wordhitsmario(playerrect, words):      #to check if word has hit mario or not
-    for f in word_list:
+    for f in all_currently_displayed_words:
         if playerrect.colliderect(f.imagerect):
             return True
         return False
@@ -693,15 +694,16 @@ waitforkey()
 
 topscore = 0
 Dragon = dragon()
+cur_speed = max_speed
 
 while True:
 
-    word_list = []
+    all_currently_displayed_words = []
     player = maryo()
     
     moveup = movedown = gravity = moveright = moveleft = judgement_state = want_right = False
-    maryoIndex=0
-    correctIndex=-1
+    maryo_index=0
+    next_unread_word_index=-1
     wordaddcounter = 0
 
     gameover.stop()
@@ -768,27 +770,32 @@ while True:
         wordaddcounter += 1
         check_level(player.score)
 
-        
-        cur_speed = max_speed
-        if len(word_list) > 0:
-            cur_speed = max(min_speed,int(word_list[maryoIndex].imagerect.left/(window_width*.66) * max_speed))
-            cur_speed = min(max_speed, cur_speed)
+        if cur_speed != mega_speed:
+            cur_speed = max_speed
+            if len(all_currently_displayed_words) > 0:
+                cur_speed = max(min_speed,int(all_currently_displayed_words[maryo_index].imagerect.left/(window_width*.66) * max_speed))
+                cur_speed = min(max_speed, cur_speed)
         
         #print(wordaddcounter)
-        if current_word_index < len(reading_string):
+        if current_word_index < len(todays_reading_string):  # this just catches the end of string condition
             if total_reading_x_distance_traversed >= next_word_x_distance_traversed:
                 #get new word word
-                newword = words(reading_string[current_word_index],Canvas,cur_speed)
+                newword = words(todays_reading_string[current_word_index],Canvas,cur_speed)
                 #calc next location
                 next_word_x_distance_traversed = int(total_reading_x_distance_traversed + newword.txtwidth)
                 print("total_reading_x_distance_traversed",total_reading_x_distance_traversed,"newword.txtwidth",newword.txtwidth,"next_word_x_distance_traversed",next_word_x_distance_traversed)
                 current_word_index += 1
-                word_list.append(newword)
+                all_currently_displayed_words.append(newword)
+                print("norm speed")
+                cur_speed = max_speed
+            elif len(all_currently_displayed_words) - 1 == maryo_index:
+                cur_speed = mega_speed
+
 
         
         counter = 0
-        for f in word_list:
-            if counter < correctIndex:
+        for f in all_currently_displayed_words:
+            if counter < next_unread_word_index:
                 words.update(f,True,cur_speed,last_correct_input)  # draw it as completed and move left
                 
                 #now add it to the score df if not already there
@@ -800,10 +807,10 @@ while True:
             else:
                 words.update(f,False,cur_speed,last_correct_input)  # otherwise just continue moving it left
             if judgement_state:
-                print('bookmark: ', current_word_index - len(word_list))
+                print('bookmark: ', current_word_index - len(all_currently_displayed_words))
 
-                if correctIndex +1 < len(word_list):
-                    correctIndex += 1
+                if next_unread_word_index +1 < len(all_currently_displayed_words):
+                    next_unread_word_index += 1
                     words.update(f,False,cur_speed,last_correct_input)  # mark it true and move left
                     
                 judgement_state = False
@@ -812,21 +819,24 @@ while True:
         total_reading_x_distance_traversed += cur_speed
 
 
-        for f in word_list:
+        for f in all_currently_displayed_words:  # this for loop removes the words that have gone over the far left of the screen
             if f.imagerect.left < player_dead_x:
-                word_list.remove(f)
-                correctIndex -= 1
-                maryoIndex -= 1
+                all_currently_displayed_words.remove(f)
+                next_unread_word_index -= 1
+                maryo_index -= 1
 
-        if want_right and maryoIndex < len(word_list) and maryoIndex < correctIndex:
-            maryoIndex += 1
-            want_right = False
-
+        if want_right:
+            print("maryo_index",maryo_index,"next_unread_word_index",next_unread_word_index)
+        if want_right and maryo_index < next_unread_word_index:
+            if maryo_index < len(all_currently_displayed_words):
+                maryo_index += 1
+                want_right = False
+            
         spot = 0
-        #print("maryoIndex",maryoIndex)
-        if len(word_list)>0 and maryoIndex < len(word_list):
-            #print("maryoIndex",maryoIndex)
-            spot = word_list[maryoIndex].imagerect.right
+        #print("maryo_index",maryo_index)
+        if len(all_currently_displayed_words)>0 and maryo_index < len(all_currently_displayed_words):
+            #print("maryo_index",maryo_index)
+            spot = all_currently_displayed_words[maryo_index].imagerect.right
 
         player.update(spot)
         Dragon.update()
@@ -841,12 +851,12 @@ while True:
 
         drawtext('Score : %s | Top score : %s | Level : %s' %(player.score, topscore, level), scorefont, Canvas, 350, cactusrect.bottom + 10)
         
-        for f in word_list:
+        for f in all_currently_displayed_words:
             Canvas.blit(f.surface, f.imagerect)
 
                
 
-        if wordhitsmario(player.imagerect, word_list):
+        if wordhitsmario(player.imagerect, all_currently_displayed_words):
             '''if player.score > topscore:
                 topscore = player.score
             break
@@ -876,9 +886,3 @@ while True:
     Canvas.blit(endimage, endimagerect)
     pygame.display.update()
     waitforkey()
-
-
-
-
-
-    
