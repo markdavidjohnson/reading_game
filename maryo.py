@@ -27,12 +27,12 @@ reading_lookup_easy = {
 }
 #next one needs to have the final length post char updates in the value locations
 reading_lookup_hard = {
-    "oo": 2,
+    "o-o": 2,
     "sh": 2,
     "in-g": 3,
     "e-r": 2,
-    "th": 2,
-    "wh": 2,
+    "t-h": 2,
+    "w-h": 2,
     "_e": 1,
     "_a": 1,
     "_k": 1,
@@ -55,7 +55,11 @@ reading_string = {
 "21":'''this cat is sic_k. this cat is sad.
 ''',
 "22":'''that is a s!e!ed. s!e!e a ram !e_at it.
-'''
+''',
+"23":'''this is a 
+roc_k. sam is 
+at th!e roc_k
+''',
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -192,16 +196,30 @@ so the fat man got in the car and made the car
 start. he said, "I like this old car. I will take it down 
 the road and never come back." 
 the end
+''',
+"75":'''bill went fishing
+bill went fishing with the other boys. the other 
+boys had lots of fish, but bill did not get nine fish or 
+five fish. he got a big old bag. 
+the other boys made fun of bill. they said, "we 
+have fish and you have an old bag."
+bill was sad. but then he said, "wow. this bag is 
+filled with gold." 
+the other boys looked inside the bag. "wow," they 
+said.
+now bill was not sad. he said to the other boys,
+"you have lots of fish, but I have lots and lots of gold. 
+so I am rich."
 '''
 }
 #suggested regex to quality check the paragraph you enter:
 #(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
 student_name = 'B'  # 'Dad' 'B' 'O'
-current_lesson = "74"
-#current_lesson = "21"
+current_lesson = "75"
+#current_lesson = "23"
 current_word_index = 0
-#current_word_index = 7
+#current_word_index = 0
 
 
 if student_name == 'O':
@@ -210,7 +228,7 @@ if student_name == 'O':
     min_speed = 1
 elif student_name == "B":
     completion_color = (50,50,255)
-    max_speed = 4
+    max_speed = 3
     min_speed = 1
 else:
     completion_color = (50,255,50)
