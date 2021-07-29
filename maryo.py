@@ -60,6 +60,13 @@ reading_string = {
 roc_k. sam is 
 at th!e roc_k
 ''',
+"24": '''''',
+"25": '''''',
+"26": '''a man sat 
+on a ram. 
+t-hat ram can 
+not s!e!e 
+''',
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -211,15 +218,33 @@ now bill was not sad. he said to the other boys,
 "you have lots of fish, but I have lots and lots of gold. 
 so I am rich."
 this is the end
+''',
+"76": '''the fat eagle
+there was an eagle that was fat, fat, fat. the other 
+eagles made fun of the fat eagle. they said, "you do not 
+Looks like an eagle. you look like a fat rock." 
+the fat eagle was sitting in a tree when a tiger 
+came hunting for eagles. that tiger was going to get a 
+little white eagle. the little white eagle was under the 
+fat eagle's tree. the other eagles yelled, but the little 
+white eagle did not hear them.
+the fat eagle looked at the tiger getting near the 
+white eagle. then the fat eagle said, "i must save that 
+white eagle." so he jumped down. he came down on 
+the tiger like a fat rock. that tiger ran far away. the 
+little wihte eagle was saved. 
+when the other eagles came over to the fat eagle, 
+they said, "we will never make fun of you now."
+the end 
 '''
 }
 #suggested regex to quality check the paragraph you enter:
 #(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
-student_name = 'Dad'  # 'Dad' 'B' 'O'
-current_lesson = "75"
-#current_lesson = "23"
-current_word_index = 47
+student_name = 'O'  # 'Dad' 'B' 'O'
+current_lesson = "76"
+current_lesson = "26"
+current_word_index = 0
 #current_word_index = 0
 
 
