@@ -210,15 +210,16 @@ said.
 now bill was not sad. he said to the other boys,
 "you have lots of fish, but I have lots and lots of gold. 
 so I am rich."
+this is the end
 '''
 }
 #suggested regex to quality check the paragraph you enter:
 #(?<!th|!|_)e( |\.)|(?<!_)a(?!(n))|er|(?<!_)ed( |\.)|\S\n|my | her |shine|lik|ing | ov| smil|eagle|le | old|horse|[A-Z]|fly|hor|sid|cannot
 
-student_name = 'B'  # 'Dad' 'B' 'O'
+student_name = 'Dad'  # 'Dad' 'B' 'O'
 current_lesson = "75"
 #current_lesson = "23"
-current_word_index = 0
+current_word_index = 47
 #current_word_index = 0
 
 
@@ -570,19 +571,19 @@ class maryo:
 
         if (moveup and (self.imagerect.top > cactusrect.bottom)):
             self.imagerect.top -= self.speed
-            self.score += 1
+            #self.score += 1
             
         if (movedown and (self.imagerect.bottom < firerect.top)):
             self.imagerect.bottom += self.downspeed
-            self.score += 1
+            #self.score += 1
         
         if (moveleft and (self.imagerect.left > 0)):
             self.imagerect.right -= self.speed
-            self.score -= 1
+            #self.score -= 1
             
         if (moveright and (self.imagerect.right < window_width)):
             self.imagerect.right += self.downspeed
-            self.score += 1
+            #self.score += 1
             
         if (gravity and (self.imagerect.bottom < firerect.top)):
             self.imagerect.bottom += self.speed
@@ -695,6 +696,7 @@ waitforkey()
 topscore = 0
 Dragon = dragon()
 cur_speed = max_speed
+last_chocolate_chip_time = datetime.datetime.now()
 
 while True:
 
@@ -790,6 +792,9 @@ while True:
                 cur_speed = max_speed
             elif len(all_currently_displayed_words) - 1 == maryo_index:
                 cur_speed = mega_speed
+                if datetime.datetime.now() - last_chocolate_chip_time > datetime.timedelta(seconds=6):
+                    last_chocolate_chip_time = datetime.datetime.now()
+                    player.score += 1
 
 
         
@@ -850,6 +855,13 @@ while True:
         
 
         drawtext('Score : %s | Top score : %s | Level : %s' %(player.score, topscore, level), scorefont, Canvas, 350, cactusrect.bottom + 10)
+        choco_image = load_image('chocolate_chip_vanilla.png')
+        choco_image = pygame.transform.scale(choco_image, (20, 20))
+        choco_image_imagerect = choco_image.get_rect()
+        choco_image_imagerect.centerx = 330
+        choco_image_imagerect.centery = cactusrect.bottom + 17
+        Canvas.blit(choco_image, choco_image_imagerect)
+
         
         for f in all_currently_displayed_words:
             Canvas.blit(f.surface, f.imagerect)
