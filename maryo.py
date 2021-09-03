@@ -79,6 +79,8 @@ in t-h!e mud.
 """,
 "30": """ t-his is a cat. t-h!e cat can run. mud is on t-h!e cat. 
 """,
+"31": """a man sat in t-h!e sand. a littl_e ant can s!e!e th!e man. th!e ant is mad. 
+""",
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -255,7 +257,7 @@ the end
 
 student_name = 'O'  # 'Dad' 'B' 'O'
 current_lesson = "76"
-current_lesson = "30"
+current_lesson = "31"
 current_word_index = 0
 #current_word_index = 0
 
