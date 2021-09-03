@@ -67,6 +67,18 @@ on a ram.
 t-hat ram can 
 not s!e!e 
 ''',
+"28": """a sock is 
+in th!e sun. 
+t-h!e soc_k is 
+on m!e.
+""",
+"29": """an ant can 
+!e_at a s!e!ed. 
+t-hat s!e!ed is 
+in t-h!e mud. 
+""",
+"30": """ t-his is a cat. t-h!e cat can run. mud is on t-h!e cat. 
+""",
 "67":'''the cat that talk_ed . . 
 a girl had a cat. sh!e lov_ed he-r cat. sh!e talk_ed to 
 he-r cat. then the cat talk_ed to he-r. the girl said, "I must
@@ -243,7 +255,7 @@ the end
 
 student_name = 'O'  # 'Dad' 'B' 'O'
 current_lesson = "76"
-current_lesson = "26"
+current_lesson = "30"
 current_word_index = 0
 #current_word_index = 0
 
@@ -416,16 +428,17 @@ class words:
                 draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
                 #add the character to the image
             else:  #so it's hard
-                if hardkey in ['oo','th','wh','e-r',"sh"]: #must be two characters long
+                if hardkey in ['oo','wh',"sh"]: #must be two characters long
                     if '-' in text:
                         text = text.replace('-','')
                     draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
                     draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
-                elif hardkey in ['e-r']: #must be two characters at the end of taking out the marker chars  # made separate because the rule before wasnt bringing htem close enough
+                elif hardkey in ['e-r','t-h']: #must be two characters at the end of taking out the marker chars  # made separate because the rule before wasnt bringing htem close enough
                     if '-' in text:
                         text = text.replace('-','')
                     draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=(255,255,255))
-                    draw.text((int(fntwidth*(i-.5)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                    draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=(255,255,255))
+                    i -= 1
                 elif hardkey in ['_e','_a','_k']:
                     draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(255,255,255))
                     text = text.replace(hardkey,hardkey.replace('_',''))
@@ -530,8 +543,8 @@ class words:
                             text = text.replace('-','')
                         draw.text((fntwidth*i+10,10), text[i], font=fnt, fill=completion_color)
                         draw.text((int(fntwidth*(i+.7)+10),10), text[i+1], font=fnt, fill=completion_color)
-                    elif hardkey in ['_e','_a']:
-                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=completion_color)
+                    elif hardkey in ['_e','_a','_k']:
+                        draw.text((fntwidth*i+10,10+(fntsize-int(fntsize/1.5))), text[i+1], font=sml_fnt, fill=(255,255,255))
                         text = text.replace(hardkey,hardkey.replace('_',''))
                         i -= 1 # to compensate for removing the _
                     elif hardkey in ["in-g"]:
